@@ -1,0 +1,307 @@
+% Homework template for Learning from Data
+% by Xiangxiang Xu <xiangxiangxu.thu@gmail.com>
+% LAST UPDATE: October 8, 2018
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+% amsmath: equation*, amssymb: mathbb, amsthm: proof
+\usepackage{moreenum}
+\usepackage{mathtools}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs} % toprule
+\usepackage[mathcal]{eucal}
+\usepackage{dsfont}
+\usepackage[numbered,framed]{matlab-prettifier}
+\input{lddef}
+
+\lstset{
+  style              = Matlab-editor,
+  captionpos         =b,
+  basicstyle         = \mlttfamily,
+  escapechar         = ",
+  mlshowsectionrules = true,
+}
+\begin{document}
+\courseheader
+
+
+
+\newcounter{hwcnt}
+\setcounter{hwcnt}{1} % set to the times of Homework
+
+\begin{center}
+  \underline{\bf Homework 4 } \\
+\end{center}
+\begin{flushleft}
+  YOUR NAME Guoqing Zhang\hfill
+  \today
+\end{flushleft}
+\hrule
+
+\vspace{2em}
+\setlist[enumerate,1]{label=\thehwcnt.\arabic*.}
+\setlist[enumerate,2]{label=(\alph*)}
+\setlist[enumerate,3]{label=\roman*.}
+\setlist[enumerate,4]{label=\greek*)}
+
+\flushleft
+\rule{\textwidth}{1pt}
+\begin{itemize}
+\item {\bf Acknowledgments: \/} 
+  This template takes some materials from course CSE 547/Stat 548 of Washington University: \small{\url{https://courses.cs.washington.edu/courses/cse547/17sp/index.html}}.
+
+  If you refer to other materials in your homework, please list here.
+\item {\bf Collaborators: \/}
+  I finish this homework by myself.
+\end{itemize}
+\rule{\textwidth}{1pt}
+
+\vspace{2em}
+4.1 (a) 
+
+If X and Y are independent, we could get that $p(xy)=p(x)p(y)$, hence we get $\mathbb{E}[XY]=\mathbb{E}[X]\mathbb{E}[Y]$.
+Because f,g are the function of X and Y, we could get that: $p(f(x)g(y) = p(f(x))p(g(y))$, which means $f(X)$ and $g(Y)$ are independent.
+
+We know that:
+\begin{equation}
+\begin{aligned}
+\rho(X,Y) = \frac{\mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])]}{\sqrt{var (X) var (Y)}}
+\end{aligned} 
+\end{equation}
+
+\begin{equation*}
+\begin{aligned}
+\mathbb{E}[(f(X)-\mathbb{E}[f(X)])(g(Y)-\mathbb{E}[g(Y)])] &= \mathbb{E}[f(X)g(Y)-f(X)\mathbb{E}[g(Y)]-g(Y)\mathbb{E}[f(X)]+\mathbb{E}[f(X)]\mathbb{E}[g(Y)]]\\
+&= \mathbb{E}[f(X)g(Y)] - \mathbb{E}[g(Y)]\mathbb{E}[f(X)] \\
+&= 0
+\end{aligned}
+\end{equation*}
+
+Put this into (1), we could get:
+$$
+\rho(X,Y) = 0
+$$
+
+(b) $\forall f,g, \rho (f(X),g(Y)) = 0$ means:
+$$
+\forall f,g, \mathbb{E}[(f(X)-\mathbb{E}[f(X)])(g(Y)-\mathbb{E}[g(Y)])]= 0
+$$
+$$\mathbb{E}[f(X)g(Y)] = \mathbb{E}[f(X)]\mathbb{E}[g(Y)]$$
+\begin{equation*}
+\begin{aligned}
+&\sum_{x \in \mathcal{X},y \in \mathcal{Y}} p(x,y)f(x)g(y) = \sum_{x \in \mathcal{X}} p(x)f(x)\sum_{y \in \mathcal{Y}}p(y)g(y)\\
+&\sum_{x \in \mathcal{X},y \in \mathcal{Y}} p(x,y)f(x)g(y) = \sum_{x \in \mathcal{X},y \in \mathcal{Y}} p(x)p(y)f(x)g(y)\\
+&\sum_{x \in \mathcal{X},y \in \mathcal{Y}} [p(x,y) - p(x)p(y)]f(x)g(y) = 0
+\end{aligned}
+\end{equation*}
+Because f,g could be arbitrary, so we assume that f(x)g(y) to be $p(x,y) - p(x)p(y)$, so we get:
+$$
+\sum_{x \in \mathcal{X},y \in \mathcal{Y}} [p(x,y) - p(x)p(y)]^2 = 0
+$$
+
+Which means:
+$$
+p(x,y)=p(x)p(y).
+$$
+So we get X and Y are independent,$X \independent Y$.
+$$$$
+4.2
+$$
+g(y) = \mathbb{E}(X|Y=y) = \sum_{x \in \mathcal{X}} P_{X|Y}(x|y)x
+$$
+$$
+g^2(y) = (\sum_{x \in \mathcal {X}} P_{X|Y}(x|y)x)^2. 
+$$
+Because $f(x)=x^2$ is a convex function, from Jenson inequality, we get:
+$$
+ (\sum_{x \in \mathcal {X}} P_{X|Y}(x|y)x)^2 \leq \sum_{x \in \mathcal{X}} P_{X|Y}(x|y)x^2.
+$$
+
+Which means:
+$$
+\begin{aligned}
+\mathbb{E}[g^2(y)] &= \sum_{y \in \mathcal{Y}}P_Y(y)(\sum_{x \in \mathcal{X}}P_{X|Y}(x|y)x)^2\\ 
+&\leq \sum_{y \in \mathcal{Y}}P_Y(y)  \sum_{x \in \mathcal{X}} P_{X|Y}(x|y)x^2\\
+&=  \sum_{y \in \mathcal{Y}} \sum_{x \in \mathcal{X}} P_{XY}(x,y)x^2\\
+&= \sum_{x \in \mathcal{X}} P_X(x)x^2 \sum_{y \in \mathcal{Y}} p(y|x)\\
+&=\sum_{x \in \mathcal{X}} P_X(x)x^2 \\
+&= \mathbb{E}[X^2]
+\end{aligned}
+$$
+So we get: $\mathbb{E}[g^2(Y)] \leq \mathbb{E}[x^2]$
+$$$$
+4.3 
+(a)
+We know that:
+$$
+AV = U\Sigma V^TV = U\Sigma 
+$$
+$$
+A\begin{bmatrix}\upsilon_1&...&\upsilon_r\end{bmatrix} = \begin{bmatrix}
+\mu_1&...&\mu_r
+\end{bmatrix}\begin{bmatrix}
+\sigma_1&\cdots&0\\
+\vdots& \ddots& \vdots\\
+0&\cdots&\sigma_r
+\end{bmatrix}
+$$
+$$
+\begin{bmatrix}A\upsilon_1&...&A\upsilon_r\end{bmatrix} = \begin{bmatrix}
+\sigma_1\mu_1&...&\sigma_r\mu_r
+\end{bmatrix}
+$$
+So we could get:$A\upsilon_i = \sigma_i\mu_i$. $A^T=V\Sigma U^T$, then use the same way we could get:
+$$
+A^T\mu_i = \sigma_i\upsilon_i
+$$
+
+(b) First, let me extend the $V$ to a basis:
+$$
+\hat V = \begin{bmatrix}
+\upsilon_1 & \cdots& \upsilon_r &\cdots & \upsilon_n.
+\end{bmatrix}
+$$
+Then any X could be written as:
+$$
+X = \sum_{i=1}^n \lambda_i \upsilon_i = \hat V \hat\lambda
+$$
+Where $\lambda = \begin{bmatrix}
+\lambda_1&\cdots&\lambda_r &\cdots& \lambda_n
+\end{bmatrix}^T$.
+
+And it's clear that $A\upsilon_j =U \Sigma V^T\upsilon_j =  \mathbf{0},j> r$, because $v_i \perp v_j$.
+
+Then we could get:
+$$
+\begin{aligned}
+Ax &= A( \sum_{i=1}^n \lambda_i \upsilon_i)\\
+&= \sum_{i=1}^r \lambda_i\sigma_i\mu_i\\
+&= U\Sigma\lambda
+\end{aligned}
+$$
+
+Where $\lambda = \begin{bmatrix}
+\lambda_1&\cdots&\lambda_r
+\end{bmatrix}^T$.
+
+So $\Vert Ax\Vert = \Vert U\Sigma\lambda \Vert = \Vert \Sigma\lambda \Vert$, while $\Vert x\Vert = \Vert \hat V \hat \lambda\Vert = \Vert \hat \lambda \Vert$.
+
+$$
+\frac{\Vert Ax\Vert}{\Vert x\Vert}=\frac{\Vert\Sigma\lambda\Vert}{ \Vert \hat \lambda \Vert} \leq \frac{\Vert\Sigma\lambda\Vert}{ \Vert\lambda \Vert} =\sqrt{\frac{\sigma_1^2\lambda_1^2+...+\sigma_r^2\lambda_r^2}{\lambda_1^2 + ... + \lambda_r^2}}
+$$
+Because we know: $\sigma_1 \ge \sigma_2 \ge ... \ge \sigma_r$, so:
+$$
+\sqrt{\frac{\sigma_1^2\lambda_1^2+...+\sigma_r^2\lambda_r^2}{\lambda_1^2 + ... + \lambda_r^2}} \leq \sqrt{\frac{\sigma_1^2\lambda_1^2+...+\sigma_1^2\lambda_r^2}{\lambda_1^2 + ... + \lambda_r^2}}\leq \sigma_1
+$$
+
+And It's clear we could get this value, just let $x = (\lambda_1+...+\lambda_r)\upsilon_1 = C\upsilon_1$.
+By now I finished the proof.
+$$$$
+4.4 (a)
+
+Because we know:
+$\phi_1 = (\sqrt{P_X(1)},...,\sqrt{P_X(\vert \mathcal{X}\vert)})^T$. 
+So $\phi_1(x) = \sqrt{P_X(x)}$, which means $f(x) = 1$.
+
+(b)
+$$
+\mathbb{E}[f^2(X)] = \sum_{x \in \mathcal{X}} p(x)f^2(x) = \sum_{x \in \mathcal{X}}(\sqrt{p(x)}f(x))^2 = \sum_{x \in \mathcal {X}} \phi^2(x) = \Vert \phi\Vert^2
+$$
+(c)
+$$
+\begin{aligned}
+\langle\phi_1,\phi_2\rangle &= \sum_{x \in \mathcal{X}} \phi_1(x)\phi_2(x)\\
+&=\sum_{x\in \mathcal{X}}\sqrt{p(x)}f_1(x)\sqrt{p(x)}f_2(x)\\
+&= \sum_{x \in \mathcal {X}} p(x)f_1(x)f_2(x)\\
+&= \mathbb{E}[f_1(x)f_2(x)]
+\end{aligned}
+$$
+$$$$
+4.5 (a) i.
+Assume $m = \vert  \mathcal{X}\vert$, $n = \vert \mathcal{Y}\vert$.
+\begin{equation*}
+\begin{aligned}
+\psi^T B \phi &= \begin{bmatrix}
+\sqrt{p(y)}g(y_1)&\cdots&\sqrt{p(y)}g(y_{ n })\end{bmatrix}
+\begin{bmatrix}
+\frac{P_{XY}(x_1,y_1)}{\sqrt{P_X(x_1)P_Y(y_1)}}&\cdots&\frac{P_{XY}(x_m,y_1)}{\sqrt{P_X(x_m)P_Y(y_1)}}\\
+\vdots &\vdots &\vdots\\
+\frac{P_{XY}(x_1,y_n)}{\sqrt{P_X(x_1)P_Y(y_n)}}&\cdots&\frac{P_{XY}(x_m,y_n)}{\sqrt{P_X(x_m)P_Y(y_n)}}
+\end{bmatrix}\begin{bmatrix}
+\sqrt{p(x)}f(x_1)\\
+\vdots\\
+\sqrt{p(x)}f(x_m)
+\end{bmatrix}\\
+&=\sum_{x,y}p(x,y)f(x)g(y)\\
+&=E[f(x)g(y)]
+\end{aligned}
+\end{equation*}
+
+ii.
+\begin{equation*}
+\begin{aligned}
+B\phi(\text{given }y) &= \sum_{x} B(y,x)\phi(x)\\
+&= \sum_x \frac{p_{XY}(x,y)}{\sqrt{p_X(x)p_Y(y)}} \cdot \sqrt{p_X(x) f(x)}\\
+&=\frac{1}{\sqrt{p_Y{y}}} \sum_x p_{XY}(x,y)f(x)\\
+&= \sqrt{p_Y(y)} \sum_x \frac{p_{XY}(x,y)}{p_{Y}(y)}f(x)\\
+&= \sqrt{p_Y(y)} \mathbb{E}[f(X)\vert Y = y] 
+\end{aligned}
+\end{equation*}
+So, $B\phi =[\sqrt{p_Y(y_1)}\mathbb{E}[f(X)\vert Y = y_1],...,\sqrt{p_Y(y_n)}\mathbb{E}[f(X)\vert Y = y_n]]^T $, Which means $B\phi \leftrightarrow\mathbb{E}[f(X)\vert Y ]$.
+
+iii.
+\begin{equation*}
+\begin{aligned}
+B^T \psi(\text{given }x) &= \sum_{y} B(y,x)\psi(y)\\
+&= \sum_y \frac{p_{XY}(x,y)}{\sqrt{p_X(x)p_Y(y)}} \cdot \sqrt{p_Y(y) g(y)}\\
+&=\frac{1}{\sqrt{p_X{x}}} \sum_y p_{XY}(x,y)g(y)\\
+&= \sqrt{p_X(x)} \sum_y \frac{p_{XY}(x,y)}{p_{X}(x)}g(y)\\
+&= \sqrt{p_Y(y)} \mathbb{E}[g(Y)\vert X = x] 
+\end{aligned}
+\end{equation*}
+So, $B^T\psi =[\sqrt{p_X(x_1)}\mathbb{E}[g(Y)\vert X = x_1],...,\sqrt{p_X(x_m)}\mathbb{E}[g(Y)\vert X = x_m]]^T $, Which means $B^T\psi \leftrightarrow\mathbb{E}[g(Y)\vert X ]$.
+
+(b)
+From (a)ii we know:
+$$
+\begin{aligned}
+B\phi_1(\text{given }y) &= \sum_{x} B(y,x)\phi(x)\\
+&= \sqrt{p_Y(y)}\sum_{x}p(x|y)\\
+&= \sqrt{p_Y(y)}
+\end{aligned}
+$$
+So $B\phi_1 = [\sqrt{p_Y(y_1)},...,\sqrt{p_Y(y_n)}]^T = \psi_1$. Use the same way we could get that $B^T\psi_1 = \phi_1$.
+
+Compare to (a)ii, we could get that $\mathbb{E}[f(X)\vert Y = y] = 1$, $\mathbb{E}[g(Y)\vert X = x]=1$. In this condition, $f(x)=1,g(y)=1$, so $\mathbb{E}[1|Y=y]$, the conditional expectation, will also be a constant.
+
+(c)
+
+Because of  4.3(b), we know that $\Vert B \Vert_2 = \sigma_1$. So now our goal is to find the largest singular vector. Because of 4.3(a):$A\upsilon_1 = \sigma_1\mu_1$, $A^T\mu_1 = \sigma_1 \upsilon_1 $ and 4.5(a)i and iii:$B\phi_1 = \psi_1,B^T\psi_1 = \phi_1$, a rational guess is that the largest singular vectors are $\phi_1,\psi_1$ and the corresponding singular value  $\sigma_1 = 1$.
+
+$B = U\Sigma V^T$, so $BB^T = U\Sigma V^T V \Sigma^T U^T = U\Sigma^2 U^T$. If $\sigma_1$ is the largest singular value, $u_1$ is the largest eigenvector of $BB^T$, use the same way we could get that $v_1$ is the largest eigenvector of $B^TB$.
+
+$B^TB\phi_1 = B^T\psi_1 = \phi_1$, so we know that $\phi_1$ is a eigenvector of $B^TB$ where the eigenvalue is $1$. Now we need to prove 1 the largest eigenvalue of $B^TB$, so we can get $\phi_1$ is the largest eigenvector. 
+
+Because $v^TB^TBv = \Vert Bv \Vert^2$, if $v$ is eigenvector, $$ v^TB^TBv  = \lambda v^T v = \lambda .$$
+So the largest eigenvalue $\hat \lambda$:$$\hat \lambda=\max(\Vert Bv \Vert^2),s.t. \Vert \upsilon \Vert = 1$$
+
+From 4.5(a)ii, we know that: $B\phi \leftrightarrow \mathbb{E}[f(X)|Y] = g(Y)$.
+$$
+\Vert B\phi\Vert^2 = \sum_{y \in \mathcal{Y}} P_Y(y)\mathbb{E}^2[f(X)|Y=y] = \sum_{y \in \mathcal{Y}} P_Y(y)g^2(y)=\mathbb{E}[g^2(Y)]
+$$
+
+From 4.2, we know:
+$$
+\Vert B\phi\Vert^2 = \mathbb{E}[g^2(Y)] \leq \mathbb{E}[f^2(x)]=\Vert \phi \Vert^2 = 1
+$$
+Because the $\phi$ could be arbitrary(The only constrain is $\Vert\psi\Vert=\Vert \phi \Vert=1$ so that they could be unit vector), so we can get: $\hat \lambda = 1$.
+So we know that the largest eigenvalue is 1. And the corresponding eigenvalue $\phi_1$ is the largest eigenvector of $B^TB$,  and we can use the same way to prove that $\psi_1$ is also the largest eigenvector of $BB^T$. So we know $\sigma_1 = 1$ is the largest singular value. And we have $$\Vert B\Vert_2=1.$$
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

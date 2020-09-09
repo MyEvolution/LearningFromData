@@ -1,0 +1,144 @@
+% Homework template for Learning from Data
+% by Xiangxiang Xu <xiangxiangxu.thu@gmail.com>
+% LAST UPDATE: October 8, 2018
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+% amsmath: equation*, amssymb: mathbb, amsthm: proof
+\usepackage{moreenum}
+\usepackage{mathtools}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs} % toprule
+\usepackage[colorlinks,linkcolor=blue]{hyperref}
+\usepackage[mathcal]{eucal}
+\usepackage{dsfont}
+\usepackage[numbered,framed]{matlab-prettifier}
+\input{lddef}
+
+\lstset{
+  style              = Matlab-editor,
+  captionpos         =b,
+  basicstyle         = \mlttfamily,
+  escapechar         = ",
+  mlshowsectionrules = true,
+}
+\begin{document}
+\courseheader
+
+
+
+\newcounter{hwcnt}
+\setcounter{hwcnt}{1} % set to the times of Homework
+
+\begin{center}
+  \underline{\bf PA2 } \\
+\end{center}
+\begin{flushleft}
+  YOUR NAME: Guoqing Zhang\hfill
+  \today
+\end{flushleft}
+\hrule
+
+\vspace{2em}
+\setlist[enumerate,1]{label=\thehwcnt.\arabic*.}
+\setlist[enumerate,2]{label=(\alph*)}
+\setlist[enumerate,3]{label=\roman*.}
+\setlist[enumerate,4]{label=\greek*)}
+
+\flushleft
+\rule{\textwidth}{1pt}
+\begin{itemize}
+\item {\bf Acknowledgments: \/} 
+  This template takes some materials from course CSE 547/Stat 548 of Washington University: \small{\url{https://courses.cs.washington.edu/courses/cse547/17sp/index.html}}.
+
+  If you refer to other materials in your homework, please list here.
+\item {\bf Collaborators: \/}
+  I finish this homework by myself.
+\end{itemize}
+\rule{\textwidth}{1pt}
+\vspace{2em}
+
+2.1.(a)
+Firstly,  we need to know the log Maximum Likelihood Estimate:
+\begin{equation*}
+\begin{aligned}
+&\log L(\mu_1,...,\mu_k,\Sigma_1,...,\Sigma_k,\phi_1,...,\phi_k)\\
+ &= \log \prod_{i=1}^m p(x_i,y_i;\mu_1,...,\mu_k,\Sigma_1,...,\Sigma_k,\phi_1,...,\phi_k)\\
+ &=\log \prod_{i=1}^m p(x_i|y_i;\mu_{y_i},\Sigma_{y_i})p(y_i;\phi_{y_i})\\
+ &=\log \prod_{i=1}^m \prod_{j=1}^k \mathbf{1}\{y_i=j\} \frac{1}{(2\pi)^{\frac n 2}\vert \Sigma_j\vert ^{\frac 1 2}} e^{-\frac 1 2(x_i-u_j)^T\Sigma^{-1}(x_i-u_j)}p(y_i=k;\phi_{k}) \\
+ &= \sum_{i=1}^m  \sum_{j=1}^k \mathbf{1}\{y_i=j\}( - \frac 1 2(x_i-u_j)^T\Sigma^{-1}(x_i-u_j) -\frac n 2 \log (2\pi) + \frac 1 2 \log\vert \Sigma_j\vert+\log p(y_i;\phi_{y_i}))\\
+\end{aligned}
+\end{equation*}
+
+If we want to find the Maximum, we need to get the derivative of Sigma. If we cut the useless parts,the function will be look like this:
+$$
+l = \frac 1 2\sum_{i=1}^m  \sum_{j=1}^k \mathbf{1}\{y_i=j\}(\log\vert \Sigma_j\vert - (x_i-u_j)^T\Sigma^{-1}(x_i-u_j))
+$$
+I need to tell some basic rules about derivative of matrix:
+
+
+\begin{align}
+\frac { \partial \vert A\vert}{\partial A} = |A|(A^{-1})^T\\
+\frac {\partial A^{-1}}{\partial x} = A^{-1}\frac{\partial A}{\partial x} A^{-1}     
+\end{align}
+
+We could use the (1) to get the $\log |\Sigma_k|$ 's derivative. Because of the SPD, we could get:
+
+\begin{align}
+\frac {\partial \log \vert \Sigma_j \vert}{\partial \Sigma_j} = (\Sigma_j^{-1})^T = \Sigma_j^{-1}
+\end{align}
+
+Then, use the rule (2). Because the x is a scalar, so we need to separate the process.First let's try to find the derivative of $\Sigma_{k,(i,j)}$:
+
+\begin{equation*}
+\begin{aligned}
+\frac{\partial \Sigma_k^{-1}}{\partial \Sigma_{k,(i,j)}} &= \Sigma_k^{-1} \frac{\partial \Sigma_k}{ \Sigma_{k,(i,j)}}\Sigma_k^{-1}\\
+(x_i-u_j)^T\frac{\partial \Sigma_k^{-1}}{\partial \Sigma_{k,(i,j)}}(x_i-u_j)&=  (x_i-u_j)^T\Sigma_k^{-1} \frac{\partial \Sigma_k}{ \Sigma_{k,(i,j)}}\Sigma_k^{-1}(x_i-u_j)
+\end{aligned}
+\end{equation*}
+
+We noticed that $(x_i-u_j)^T\Sigma_k^{-1} = (\Sigma_k^{-1}(x_i-u_j))^T $.
+And the matrix $\frac{\partial \Sigma_k^{-1}}{\partial \Sigma_{k,(i,j)}}$ will be like a n $\times$ n matrix with the exception that the value of the position(i,j) will be 1.
+$$$$
+So we could get:
+\begin{equation*}
+\begin{aligned}
+(x_i-u_j)^T\frac{\partial \Sigma_k^{-1}}{\partial \Sigma_{k,(i,j)}}(x_i-u_j)&=  (x_i-u_j)^T\Sigma_k^{-1} \frac{\partial \Sigma_k}{ \Sigma_{k,(i,j)}}\Sigma_k^{-1}(x_i-u_j)\\
+&= [(\Sigma_k^{-1}(x_i-u_j)) (\Sigma_k^{-1}(x_i-u_j))^T]_{(i,j)}
+\end{aligned}
+\end{equation*}
+
+So:
+\begin{align}
+(x_i-u_j)^T\frac{\partial \Sigma_k^{-1}}{\partial \Sigma_{k,(i,j)}}(x_i-u_j) = (\Sigma_k^{-1}(x_i-u_j)) (\Sigma_k^{-1}(x_i-u_j))^T
+\end{align}
+Now use (3) and (4),we could get: 
+\begin{equation*}
+\begin{aligned}
+\frac{\partial l}{\partial \Sigma_j} &=\frac 1 2\sum_{i=1}^m \mathbf{1}\{y_i=j\} (\Sigma_j ^{-1}-   (\Sigma_k^{-1}(x_i-u_j)) (\Sigma_k^{-1}(x_i-u_j))^T)\\
+ &=\frac 1 2\sum_{i=1}^m \mathbf{1}\{y_i=j\} (\Sigma_j ^{-1}-   \Sigma_j^{-1}(x_i-u_j)(x_i-u_j)^T\Sigma_j^{-1})
+\end{aligned}
+\end{equation*}
+Because we want to let $\frac{\partial l}{\partial \Sigma_j} = \mathbf{0}$.
+
+\begin{equation*}
+\begin{aligned}
+\frac 1 2\sum_{i=1}^m  \mathbf{1}\{y_i=j\} (\Sigma_j ^{-1}-   \Sigma_j^{-1}(x_i-u_j)(x_i-u_j)^T\Sigma_j^{-1}) = \mathbf{0}\\
+\sum_{i=1}^m\mathbf{1}\{y_i=j\} (I - \Sigma_j^{-1}(x_i-u_j)(x_i-u_j)^T) = \mathbf{0}\\
+\sum_{i=1}^m\mathbf{1}\{y_i=j\} I = \Sigma_j^{-1}\sum_{i=1}^m \mathbf{1}\{y_i=j\}(x_i-u_j)(x_i-u_j)^T
+\end{aligned}
+\end{equation*}
+So,for QDA,the $\Sigma_j$ will be like this:
+\begin{equation*}
+\begin{aligned}
+\Sigma_j = \frac{\sum_{i=1}^m \mathbf{1}\{y_i=j\}(x_i - \mu_{j}) (x_i - \mu_{j})^T}{\sum_{i=1}^m \mathbf{1}\{y_i=j\}}
+\end{aligned}
+\end{equation*}
+where $j=1,2$.
+$$$$
+(b)The Programming assignment is attached in the zip file.
+\end{document}

@@ -1,0 +1,196 @@
+% Homework template for Learning from Data
+% by Xiangxiang Xu <xiangxiangxu.thu@gmail.com>
+% LAST UPDATE: October 8, 2018
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+% amsmath: equation*, amssymb: mathbb, amsthm: proof
+\usepackage{moreenum}
+\usepackage{mathtools}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs} % toprule
+\usepackage[colorlinks,linkcolor=blue]{hyperref}
+\usepackage[mathcal]{eucal}
+\usepackage{dsfont}
+\usepackage[numbered,framed]{matlab-prettifier}
+\input{lddef}
+
+\lstset{
+  style              = Matlab-editor,
+  captionpos         =b,
+  basicstyle         = \mlttfamily,
+  escapechar         = ",
+  mlshowsectionrules = true,
+}
+\begin{document}
+\courseheader
+
+
+
+\newcounter{hwcnt}
+\setcounter{hwcnt}{1} % set to the times of Homework
+
+\begin{center}
+  \underline{\bf Homework 2 } \\
+\end{center}
+\begin{flushleft}
+  YOUR NAME: Guoqing Zhang\hfill
+  \today
+\end{flushleft}
+\hrule
+
+\vspace{2em}
+\setlist[enumerate,1]{label=\thehwcnt.\arabic*.}
+\setlist[enumerate,2]{label=(\alph*)}
+\setlist[enumerate,3]{label=\roman*.}
+\setlist[enumerate,4]{label=\greek*)}
+
+\flushleft
+\rule{\textwidth}{1pt}
+\begin{itemize}
+\item {\bf Acknowledgments: \/} 
+  This template takes some materials from course CSE 547/Stat 548 of Washington University: \small{\url{https://courses.cs.washington.edu/courses/cse547/17sp/index.html}}.
+
+  If you refer to other materials in your homework, please list here.
+\item {\bf Collaborators: \/}
+  I finish this homework by myself.But wiki ($\href{https://en.wikipedia.org/wiki/Frobenius_inner_product}{Frobenius inner product}$) and the Andrew Ng's pdf($\href{http://cs229.stanford.edu/notes/cs229-notes2.pdf}{cs229-notes2}$) helped me a lot about solving the third question. I also imitate the format of Gaussian distribution($\sigma \neq 1$) in lecture4 to get the answer. But in fact I don't understand the third one very well. 
+\end{itemize}
+\rule{\textwidth}{1pt}
+
+\vspace{2em}
+2.1. We can always meet the situation that the dimension of $\mathbf{x}$ is bigger than the number of the sample.Or the rank of matrix$\mathbf{X}$ is less than its dimension.In this situation the $X^TX$ is singular. In that case the equation is still right. The proof will be like follows:
+
+In that case, we could find a lot $\theta$ to satisfy the equation:
+$\mathbf{y} = \mathbf{X}\theta $ (1) .
+
+If we put (1) into the $\mathbf{X}^T \mathbf{y}$,we will get $\mathbf{X}^T\mathbf{X} \theta $, so of couse the old equation is right.
+
+I don't know the other cases, so the proof may not be strict.
+$$$$ 
+2.2. (a) Firstly, we unfold the function $\ell$:
+  \begin{equation*}
+    \begin{aligned}
+\ell &= \sum _{i=1}^m \log {P_{y|\mathbf{x}}(y_{(i)}|\mathbf{x}^{(i)})}
+\\
+ &= \sum _{i=1}^m \log \prod _{l=1} ^k \left(
+\frac{exp(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l)}{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j)} 
+ \right)^{\mathbf{1}\{y^{(i)} = l\}} \\  
+    &= \sum_{i=1}^m \sum_{l=1}^k \mathbf{1}\{ y^{(i)}=l\}\log\left( \frac{exp(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l)}{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}+b_j)} \right)
+      \end{aligned}
+  \end{equation*}
+so,if we want get the derivative of $b_l$,the $\ell$ will can also be wrote like this:
+
+\begin{equation*}
+\begin{aligned}
+\ell &= \sum_{i=1}^m\left( \mathbf{1}\{y^{(i)} = l\}\log\left( \frac{exp(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l)}{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j)} \right) + 
+\mathbf{1}\{y^{(i)} \neq l\}\log\left( \frac{exp(\mathbf{\theta}_{y^{(i)}}^T\mathbf{x}^{(i)}+b_{y^{(i)}})}{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j)} \right)
+\right)\\
+&= \sum_{i=1}^m (\mathbf{1}\{y^{(i)} = l\} f_1(b_l)+\mathbf{1}\{y^{(i)} \neq l\}f_2(b_l))
+\end{aligned}
+\end{equation*}
+$$
+f_1(b_l) = \log\frac{exp(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l)}{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j)},
+f_2(b_l) = \log\frac{exp(\mathbf{\theta}_{y^{(i)}}^T\mathbf{x}^{(i)}+b_{y^{(i)}})}{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j)}
+.$$
+so we could get the derivative respectively.
+\begin{equation*}
+\begin{aligned}
+\nabla _{b_l} f_1 &=  \frac{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j)}{exp(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l)}\cdot
+\frac{exp(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l)\cdot \sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j) - exp(2\cdot(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l))}{(\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j))^2}\\
+&=1 - \frac{exp(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l)}{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j)}\\
+&= 1 - {P_{y|\mathbf{x}}(l|\mathbf{x}^{(i)})}
+\end{aligned}
+\end{equation*}
+For the case "$y^{(i)} \neq l$",we assume that $y^{(i)} = v$.So the part of $f_2$ will be as follows:
+\begin{equation*}
+\begin{aligned}
+\nabla _{b_l} f_2 &=  \frac{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j)}{exp(\mathbf{\theta}_v^T\mathbf{x}^{(i)}+b_v)}\cdot
+\frac{- exp(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l)\cdot exp(\mathbf{\theta}_v^T\mathbf{x}^{(i)}+b_v)}{(\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j))^2}\\
+&= - \frac{exp(\mathbf{\theta}_l^T\mathbf{x}^{(i)}+b_l)}{\sum_{j=1}^k exp(\mathbf{\theta}_j^T\mathbf{x}^{(i)}+b_j)}\\
+&=  - {P_{y|\mathbf{x}}(l|\mathbf{x}^{(i)})}
+\end{aligned}
+\end{equation*}
+
+To sum up,we can get:
+\begin{equation*}
+\begin{aligned}
+\nabla _{b_l} \ell = \sum _{i=1}^m(\mathbf{1}\{y_i=l\} - P_{y|\mathbf{x}}(l|\mathbf{x}^{(i)}))
+\end{aligned}
+\end{equation*}
+(b) Because we get the optimal $(b_1,...,b_k)$,so we could know that:
+  \begin{equation*}
+\begin{aligned}
+\nabla _{b_l} \ell = \sum _{i=1}^m(\mathbf{1}\{y_i=l\} - P_{y|\mathbf{x}}(l|\mathbf{x}^{(i)})) = 0
+\end{aligned}
+\end{equation*}
+Because we know that the training dataset should not contain any duplicate samples. So we can get $\hat{P}_{\mathbf{x}}(\mathcal{X}) = \frac 1 m$.Then we get:
+  \begin{equation*}
+\begin{aligned}
+ &\sum _{i=1}^m\mathbf{1}\{y_i=l\} = \sum_{i=1}^m P_{y|\mathbf{x}}(l|\mathbf{x}^{(i)})\\
+ &\frac{1}{m} \sum _{i=1}^m\mathbf{1}\{y_i=l\}  = \frac{1}{m} \sum_{i=1}^m P_{y|\mathbf{x}}(l|\mathbf{x}^{(i)})\\
+ &\hat{P}_y(l) = \sum_{i=1}^m \frac{1}{m} P_{y|\mathbf{x}}(l|\mathbf{x}^{(i)}) = \sum_{i=1}^m P_{y|\mathbf{x}}(l|\mathbf{x}^{(i)}) \cdot \hat{P}_{\mathbf{x}}(\mathbf{x}_i)
+\end{aligned}
+\end{equation*}
+
+So:
+  \begin{equation*}
+\begin{aligned}
+\hat{P}_y(l) = \sum_{\mathbf{x} \in \mathcal{X}}P_{y|\mathbf{x}}(l|\mathbf{x})\hat{P}_{\mathbf{x}}(\mathcal{X})
+\end{aligned}
+\end{equation*}
+In some cases, the training dataset may have some duplicate samples. In that case, the set $\mathcal{X}$ 's size will be less than m,but the duplicate samples' $\hat{P}_{\mathbf{x}}(\mathcal{X})$ will be bigger than $\frac 1 m$, because of this offset, $ \sum_{\mathbf{x} \in \mathcal{X}}P_{y|\mathbf{x}}(l|\mathbf{x})\hat{P}_{\mathbf{x}}(\mathcal{X})$ will still be equal to $\sum_{i=1}^m P_{y|\mathbf{x}}(l|\mathbf{x}^{(i)})$, so the conclusion will not be changed. 
+$$$$
+2.3. Like on the class, firstly I consider the situation that $\sum ^{-1} = \mathbf{I}$, so the probability density function will be as follow:
+  \begin{equation*}
+\begin{aligned}
+p_{\mathbf{y}}(\mathbf{y};\mathbf{\mu}) &= \frac {1}{(2 \pi)^{\frac n 2}} exp(-\frac 1 2 (\mathbf{y} - \mathbf{\mu})^T(\mathbf{y} - \mathbf{\mu}))\\
+&= \frac {1}{(2 \pi)^{\frac n 2}} exp(-\frac 1 2 \Vert \mathbf{y} - \mathbf{\mu}\Vert^2)\\
+&= \frac {1}{(2 \pi)^{\frac n 2}} exp(-\frac 1 2 \Vert \mathbf{y} \Vert^2 +  \mathbf{y}^T\mathbf{\mu} - \frac 1 2 \Vert \mathbf{\mu}\Vert^2)\\
+&=\frac {1}{(2 \pi)^{\frac n 2}} exp(-\frac 1 2 \Vert \mathbf{y} \Vert^2)\cdot exp(\mathbf{y}^T\mathbf{\mu} - \frac 1 2 \Vert \mathbf{\mu}\Vert^2)
+\end{aligned}
+\end{equation*}
+So in this case :
+  \begin{equation*}
+\begin{aligned}
+&\eta = \mathbf{\mu} \\
+&b(\mathbf{y}) = \frac {1}{(2 \pi)^{\frac n 2}} exp(-\frac 1 2 \Vert \mathbf{y} \Vert^2)\\
+&T(\mathbf{y}) = \mathbf{y}\\
+&a(\eta) = \frac 1 2 \mathbf{\mu}^T\mathbf{\mu}
+\end{aligned}
+\end{equation*}
+In general:
+\begin{equation*}
+\begin{aligned}
+p_{\mathbf{y}}(\mathbf{y};\mathbf{\mu},\Sigma) &= \frac {1}{(2 \pi)^{\frac n 2}} exp(-\frac 1 2 (\mathbf{y} - \mathbf{\mu})^T \Sigma^{-1} (\mathbf{y} - \mathbf{\mu}))\\
+&= \frac {1}{(2 \pi)^{\frac n 2}} exp(-\frac 1 2  \mathbf{y}^T \Sigma^{-1}\mathbf{y} + \mathbf{y}^T\Sigma^{-1}\mathbf{\mu} - \frac 1 2  \mathbf{\mu}^T \Sigma^{-1}\mathbf{\mu} )\\
+&= \frac {1}{(2 \pi)^{\frac n 2}} exp(-\frac 1 2 \mathbf{vec}^T({\Sigma}^{-1})\cdot  \mathbf{vec}(\mathbf{yy}^T) +\mathbf{\mu}^T\Sigma^{-1}\mathbf{y}  -\frac 1 2  \mathbf{\mu}^T \Sigma^{-1}\mathbf{\mu})
+\end{aligned}
+\end{equation*}
+So in general cases :
+\begin{equation*}
+\begin{aligned}
+&\eta = \begin{bmatrix}
+u^T \Sigma^{-1}\\
+-\frac 1 2 \mathbf{vec}(\Sigma^{-1})
+\mathbf{\mu}
+\end{bmatrix}_{(n+n^2) \times 1} \\
+&b(\mathbf{y}) = \frac {1}{(2 \pi)^{\frac n 2}}\\
+&T(\mathbf{y}) =  \begin{bmatrix}
+\mathbf{y}\\
+\mathbf{vec}(\mathbf{yy}^T)
+\mathbf{\mu}
+\end{bmatrix}_{(n+n^2) \times 1} \\
+&a(\eta) = \frac 1 2  \mathbf{\mu}^T \Sigma^{-1}\mathbf{\mu}
+\end{aligned}
+\end{equation*}
+I am really not sure about the answer. I just watched the wiki about Frobenius inner product.And I saw the operator : $\mathbf{vec}$. The answer is what I guessed to make sure they could dot to get a number.
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -1,0 +1,243 @@
+% Homework template for Learning from Data
+% by Xiangxiang Xu <xiangxiangxu.thu@gmail.com>
+% LAST UPDATE: October 8, 2018
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+% amsmath: equation*, amssymb: mathbb, amsthm: proof
+\usepackage{moreenum}
+\usepackage{mathtools}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs} % toprule
+\usepackage[mathcal]{eucal}
+\usepackage{dsfont}
+\usepackage[numbered,framed]{matlab-prettifier}
+\input{lddef}
+
+\lstset{
+  style              = Matlab-editor,
+  captionpos         =b,
+  basicstyle         = \mlttfamily,
+  escapechar         = ",
+  mlshowsectionrules = true,
+}
+\begin{document}
+\courseheader
+
+
+
+\newcounter{hwcnt}
+\setcounter{hwcnt}{1} % set to the times of Homework
+
+\begin{center}
+  \underline{\bf Homework 2 } \\
+\end{center}
+\begin{flushleft}
+  YOUR NAME Guoqing Zhang\hfill
+  \today
+\end{flushleft}
+\hrule
+
+\vspace{2em}
+\setlist[enumerate,1]{label=\thehwcnt.\arabic*.}
+\setlist[enumerate,2]{label=(\alph*)}
+\setlist[enumerate,3]{label=\roman*.}
+\setlist[enumerate,4]{label=\greek*)}
+
+\flushleft
+\rule{\textwidth}{1pt}
+\begin{itemize}
+\item {\bf Acknowledgments: \/} 
+  This template takes some materials from course CSE 547/Stat 548 of Washington University: \small{\url{https://courses.cs.washington.edu/courses/cse547/17sp/index.html}}.
+
+  If you refer to other materials in your homework, please list here.
+\item {\bf Collaborators: \/}
+  I finish this homework by myself.
+\end{itemize}
+\rule{\textwidth}{1pt}
+
+\vspace{2em}
+3.1 (a) i.
+First, it's obvious that we can just focus on the part: $\sum_{x \in C_j} \Vert x - \mu_j\Vert^2$ and $\frac{1}{2\vert C_j \vert} \sum_{x,x'\in C_j}\Vert x - x'\Vert^2$.
+
+$$
+\begin{aligned}
+\sum_{x \in C_j} \Vert x - \mu_j\Vert^2&= \sum_{x \in C_j} \left(\Vert x\Vert ^2  -2x^T\mu_j +\Vert\mu_j\Vert^2\right)\\
+&= \sum_{x \in C_j} \Vert x\Vert^2 - \frac 2{\vert C_j\vert}\sum_{x \in C_j} x^T \sum_{x' \in C_j} x' +\frac{1}{\vert C_j \vert^2}\sum_{x \in C_j}  \sum_{x' in C_j} x'^T \sum_{x'' \in C_j} x''  \\
+&= \sum_{x \in C_j} \Vert x\Vert^2  - \frac{2}{\vert C_j\vert} \sum_{x ,x'\in C_j } x^Tx'+ \frac{\vert C_j\vert}{\vert C_j\vert^2} \sum_{x ,x'\in C_j } x^Tx'\\
+&= \sum_{x \in C_j} \Vert x\Vert^2  -  \frac{1}{\vert C_j\vert}\sum_{x ,x'\in C_j } x^Tx'
+\end{aligned}
+$$
+$$
+\begin{aligned}
+\frac{1}{2\vert C_j \vert} \sum_{x,x'\in C_j}\Vert x - x'\Vert^2 &= \frac{1}{2\vert C_j \vert} \sum_{x,x'\in C_j}\left( \Vert x\Vert ^2 - 2x^Tx'+ \Vert x'\Vert^2\right)\\
+& = \frac{1}{\vert C_j \vert} \sum_{x,x' \in C_j} \Vert x\Vert^2 - \frac{1}{\vert C_j\vert} \sum_{x,x' \in C_j} x^Tx'\\
+&= \sum_{x \in C_j} \Vert x\Vert^2  -  \frac{1}{\vert C_j\vert}\sum_{x ,x'\in C_j } x^Tx'
+\end{aligned}
+$$
+So they are equivalent.
+
+ii. 
+Because of i, we could know:
+$$
+\begin{aligned}
+\sum_{j=1}^k\sum_{x \in C_j} \Vert x - \mu_j \Vert^2 &= \sum_{j=1}^k\sum_{x \in C_j} \left(\Vert x\Vert^2  -  \frac{1}{\vert C_j\vert}\sum_{x ,x'\in C_j } x^Tx'\right)\\
+&=\sum_{i = 1}^m \Vert x \Vert^2 - \sum_{j=1}^k\frac{1}{\vert C_j\vert}\sum_{x ,x'\in C_j } x^Tx'\\
+&= A - \sum_{j=1}^k\frac{1}{\vert C_j\vert}\sum_{x ,x'\in C_j } x^Tx'
+\end{aligned}
+$$
+
+Where $A=\sum_{i = 1}^m \Vert x \Vert^2$ is a constant.
+
+So $argmin_C (A - \sum_{j=1}^k\frac{1}{\vert C_j\vert}\sum_{x ,x'\in C_j } x^Tx') = argmax_c(\sum_{j=1}^k\frac{1}{\vert C_j\vert}\sum_{x ,x'\in C_j } x^Tx') $
+
+First,let's just focus on the $\sum_{j=1}^k\vert C_i \vert\vert C_j\vert \Vert \mu_i - \mu_j \Vert^2$.
+$$
+\begin{aligned}
+\sum_{j=1}^k\vert C_i \vert\vert C_j\vert \Vert \mu_i - \mu_j \Vert^2 &= \vert C_i \vert \sum_{j=1}^k \vert C_j\vert\left(\Vert \mu_i \Vert^2 - 2\mu_i^T\mu_j + \Vert \mu_j \Vert^2\right)\\
+&=  \sum_{j=1}^k  \left(\frac{\vert C_j\vert}{\vert C_i\vert}\sum_{x,x' \in C_i} x^Tx' -2\sum_{x \in C_i, x' \in C_j} x^Tx'  + \frac{\vert C_i\vert}{\vert C_j\vert}\sum_{x,x' \in C_j} x^Tx'\right)
+\end{aligned}
+$$
+Then, combine the whole fomulation:
+$$
+\begin{aligned}
+\sum_{i=1}^k\sum_{j=1}^k\vert C_i \vert\vert C_j\vert \Vert \mu_i - \mu_j \Vert^2 &= \sum_{i=1}^k\sum_{j=1}^k \left(\frac{\vert C_j\vert}{\vert C_i\vert}\sum_{x,x' \in C_i} x^Tx' + \frac{\vert C_i\vert}{\vert C_j\vert}\sum_{x,x' \in C_j} x^Tx'-2\sum_{x \in C_i, x' \in C_j} x^Tx'\right)\\
+&= 2\sum_{i=1}^k\sum_{j=1}^k\left(\frac{\vert C_j\vert}{\vert C_i\vert}\sum_{x,x' \in C_i} x^Tx'-\sum_{x \in C_i, x' \in C_j} x^Tx' \right)\\
+&= 2\sum_{i=1}^k\frac{m}{\vert C_i\vert}\sum_{x,x' \in C_i} x^Tx'-2\sum_{i=1}^k\sum_{j=1}^k\sum_{x \in C_i, x' \in C_j} x^Tx'\\
+&= 2\sum_{i=1}^k \frac{m+\vert C_i \vert}{\vert C_i \vert} \sum_{x,x' \in C_i} x^Tx' - 2\left(\sum_{i=1}^k\sum_{j=1}^k\sum_{x \in C_i, x' \in C_j} x^Tx' +\sum_{i=1}^k\sum_{x,x' \in C_i} x^Tx' \right)\\
+&= 2\sum_{i=1}^k \frac{m+\vert C_i \vert}{\vert C_i \vert} \sum_{x,x' \in C_i} x^Tx' - A\\
+&= 2\sum_{i=1}^k (\frac{m}{\vert C_i\vert} + 1) \sum_{x,x' \in C_i} x^Tx' - A
+\end{aligned}
+$$ 
+
+Where A is a constant, it's equal to 	all the pair's product in X. 
+Now I have some trouble to eliminate '1'. It's a little embarrassing. I am not sure which step is wrong, or I can't proof it in this way.
+
+I also see something about the law of total variance could help to prove it. But I am not very clear about it, so I won't write down.
+
+(b) i.
+If the algorithm has converged, than the $\mu$ would be never change, so it's obvious that the distortion will increase.
+
+The distortion could be compute at two states. First, from x we got $\mu$, compute $J$, then, we reassign the clusters, compute $J$.
+
+It's obvious that in the second state, the $J$ will not increase, because:
+$$
+J(\{c^{(i)}\}_{i=1}^m,\{\mu_j\}_{j=1}^k) = \sum_{i=1}^m\Vert x^{(i) - \mu_{c^{i}}}\Vert^2
+$$
+
+And the x is reassigned to the closest $\mu_j$, which means:$\Vert x^{(i) - \mu'_{c^{(i)}}}\Vert ^2 \leq \Vert x^{(i) - \mu_{c^{(i)}}}\Vert ^2$. Each term will not increase, so the distortion will also not increase.
+
+Then what we want to prove is:
+$$
+argmin_{p} \sum_{x\in C_j} \Vert x - p \Vert^2 = \mu_j
+$$
+
+Assume $l(p) =  \sum_{x\in C_j} \Vert x - p \Vert^2$.
+$$
+\begin{aligned}
+\frac{\partial l}{\partial p} &=\frac{\partial\sum_{x \in C_j} \left(\Vert x \Vert^2 - 2x^Tp + \Vert p\Vert^2\right)}{\partial p}\\
+&=\sum_{x \in C_j}2(p -  x)\\
+&= 2 \vert C_j\vert p - 2 \sum_{x \in C_j} x
+\end{aligned}
+$$
+
+Then let $\frac{\partial l}{\partial p} = 0$, we could get:
+$$
+p = \frac{1}{\vert C_j\vert} \sum_{x \in C_j} x = \mu_j
+$$
+This means J will not increase in the first state.
+
+The Lloyd's algorithm just iterates the two steps, so the distortion will not increase. 
+
+ii. It will always converge. First, the distortion J have the lower bound:$J \ge 0$. If we consider the valuse of J computed from each iteration as a sequence, we know that Monotonous bounded sequence has a convergence. Frome i, we know that this sequence is monotonous, which means this algorhithm will converge.
+
+$$$$
+3.2 (a) i. $$
+\begin{aligned}
+\mu_T \Cov(x)\mu &= 
+\begin{bmatrix}
+\mu_1&\mu_2&\cdots&\mu_d 
+\end{bmatrix}
+\begin{bmatrix}
+\Cov(x_1,x_1)&\Cov(x_1,x_2)&\cdots &\Cov(x_1,x_d)\\
+\Cov(x_2,x_1)&\Cov(x_2,x_2)&\cdots &\Cov(x_2,x_d)\\
+\vdots& \vdots & \ddots &\vdots\\
+\Cov(x_d,x_1) &\Cov(x_d,x_2) &\cdots &\Cov(x_d,x_d)
+\end{bmatrix}\begin{bmatrix}
+\mu_1\\
+\mu_2\\
+\vdots\\
+\mu_d 
+\end{bmatrix}\\
+&= \begin{bmatrix}
+\mu_1&\mu_2&\cdots&\mu_d 
+\end{bmatrix}\begin{bmatrix}
+D(x_1)&\Cov(x_1,x_2)&\cdots &\Cov(x_1,x_d)\\
+\Cov(x_2,x_1)&D(x_2)&\cdots &\Cov(x_2,x_d)\\
+\vdots& \vdots & \ddots &\vdots\\
+\Cov(x_d,x_1) &\Cov(x_d,x_2) &\cdots &D(x_d)
+\end{bmatrix}\begin{bmatrix}
+\mu_1\\
+\mu_2\\
+\vdots\\
+\mu_d 
+\end{bmatrix}\\
+&= \sum_{i=1}^d \mu_i^2D(x_i)+\sum_{i=1}^{d-1}\sum_{j=i+1}^d 2\mu_i \mu_j \Cov(x_i,x_j)\\
+&= \sum_{i=1}^d D(\mu_ix_i)+\sum_{i=1}^{d-1}\sum_{j=i+1}^d 2 \Cov(\mu_ix_i,\mu_j x_j)\\
+&=  D(\mu_1x_1 + \mu_2x_2+ \cdots \mu_dx_d)\\
+& \ge 0
+\end{aligned}
+$$
+We could do this because:
+$$
+D(x) + D(y) +2\Cov(x,y) = D(x+y),\Cov(x,z)+\Cov(y,z) = \Cov(x+y,z)
+$$
+So:
+$$
+\begin{aligned}
+&D(x)+D(y) +D(z) +2\Cov(x,y) +2 \Cov(x,z) + 2\Cov(y,z) \\
+&= D(x+y) +D(z)+ 2\Cov(x,z) + 2\Cov(y,z)\\
+&=D(x+y) +D(z) +2\Cov(x+y,z)\\
+&=D(x+y+z)
+\end{aligned}
+$$
+
+In the same way, we could increase 3 variables to n variables, so until now I finish the proof.
+
+ii. From i, we could get:
+$$
+\begin{aligned}
+tr(\Cov(x)) &= \sum_{i=1}^d  D(x_i)
+\end{aligned}
+$$
+$$
+\begin{aligned}
+\mathbb{E}[\Vert x - \mathbb{E}[x] \Vert^2] &= \mathbb E[(x_1-\mathbb{E}[x_1])^2 + ... +(x_d-\mathbb{E}[x_d])^2]\\
+&= \sum_{i=1}^d \mathbb E [(x_i - \mathbb E[x_i])^2]\\
+&= \sum_{i=1}^d D(x_i)
+\end{aligned}
+$$
+So, we get that $ tr(\Cov(x)) =\mathbb{E}[\Vert x - \mathbb{E}[x] \Vert^2]  $.
+
+(b) If we want to the $\hat C$ is non-singular, where $\hat C$ is a $d \times d$ matrix. The intuition is that $m\ge d$. 
+
+And the intuition is true. Because the rank of the matrix $\hat C$ is limited by the rank of $X$, where
+$$
+X_{m \times d} = \begin{bmatrix}
+x_1^T\\
+x_2^T\\
+\vdots\\
+x_m^T
+\end{bmatrix}.
+$$
+
+So we could see: $r(X) \leq \min(m,d)$. So we could get that $m \ge d$.
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
